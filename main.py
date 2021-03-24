@@ -1,6 +1,8 @@
 import pygame
 from pygame.locals import *
 from obstaculos import Obstaculos
+import random
+
 def inicia():
     base=pygame.Rect(45,10,400,400)
     botao = pygame.Rect(90, 300, 125, 50)
@@ -37,10 +39,7 @@ ret=pygame.Rect(10,10,10,10)
 # OBJETOS
 objectGroup = pygame.sprite.Group()
 
-obs1 = Obstaculos(objectGroup)
-obs2 = Obstaculos(objectGroup)
-obs3 = Obstaculos(objectGroup)
-
+timer = 0
 clock = pygame.time.Clock()
 
 # MÚSICA DO MENU
@@ -73,6 +72,13 @@ while True:
     pygame.draw.rect(screen, azul, ret)
 
     objectGroup.update()
+
+    timer += 1
+    if timer > 30:
+        timer = 0
+        if random.random() < 0.3:
+            newObstaculos = Obstaculos(objectGroup)
+
     objectGroup.draw(screen)
 
     pygame.display.update()
