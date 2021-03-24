@@ -37,8 +37,9 @@ ret=pygame.Rect(10,10,10,10)
 # OBJETOS
 objectGroup = pygame.sprite.Group()
 
-boss = Obstaculos(objectGroup)
-#boss.rect.center = [70, 100]
+obs1 = Obstaculos(objectGroup)
+obs2 = Obstaculos(objectGroup)
+obs3 = Obstaculos(objectGroup)
 
 clock = pygame.time.Clock()
 

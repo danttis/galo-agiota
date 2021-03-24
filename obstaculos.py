@@ -13,7 +13,10 @@ class Obstaculos(pygame.sprite.Sprite):
         self.rect.x = 500 + random.randint(1, 250)
         self.rect.y = random.randint(1, 420)
 
-        self.speed = 5
+        self.speed = 1 + random.random() * 2
 
     def update(self, *args):
         self.rect.x -= self.speed
+
+        if self.rect.right < 0:
+            self.kill()
