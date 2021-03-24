@@ -1,4 +1,2 @@
 #README
-@allan
-@dante
-@osbony
+Jogo RINHA DE GALO
