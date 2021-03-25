@@ -7,6 +7,9 @@ class Persona(pygame.sprite.Sprite):
         self.image=pygame.transform.scale(self.image,[100,100])
         self.rect=pygame.Rect(124,263,10,10)
 
+        #O que vai dar "Movimento" ao personagem, a física em sí
+        self.speed = 0
+        self.acceleration = 0.1
     def update(self, *args, **kwargs):
         # LOGICA DO PERSONAGEM
 
@@ -14,9 +17,19 @@ class Persona(pygame.sprite.Sprite):
         keyMOVI=pygame.key.get_pressed()
         # Movimentação pra cima e pra baixo
         if keyMOVI[pygame.K_DOWN]:
-            self.rect.y +=5
+            self.speed +=self.acceleration
         elif keyMOVI[pygame.K_UP]:
-            self.rect.y -=5
-        #Tecla para disparar
-        if keyMOVI[pygame.K_SPACE]:
-            self.rect.x += 5
+            self.speed -=self.acceleration
+        else:
+            self.speed *=0.93
+
+        self.rect.y+=self.speed
+
+        #NÃO PERMITIR QUE ELE PASSE DA PARTE DE CIMA OU BAIXO
+        if self.rect.top<0:
+            self.rect.top=0
+            self.speed = 0
+        elif self.rect.bottom>500:
+            self.rect.bottom = 500
+            self.speed = 0
+

@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from obstaculos import Obstaculos
 from personagem import Persona
+from municao import Municao
 import random
 
 
@@ -33,15 +34,19 @@ pygame.mixer.music.play(-1)
 
 # CHAMANDO OBJETO
 objectGroup = pygame.sprite.Group()
+obstaculosGroup=pygame.sprite.Group()
+tiroGroup=pygame.sprite.Group()
 
 #INSTANCIA DO OBJETO
 personagem =Persona(objectGroup)
+
 
 timer = 0
 clock = pygame.time.Clock()
 
 if __name__ == "__main__":
     gameLooping=True
+    perdeu=False
     while gameLooping:
         #Limitador de FPS
         clock.tick(60)
@@ -55,18 +60,30 @@ if __name__ == "__main__":
             if event.type ==pygame.QUIT:
                 pygame.quit()
                 exit(0)
+            if event.type==pygame.KEYDOWN:
+                if event.key==pygame.K_SPACE:
+                    newTiro=Municao(objectGroup,tiroGroup)
+                    newTiro.rect.center=personagem.rect.center
 
 
 
+        #Lógica do game em sí
 
-        ##Obstaculos que vem na tela, os galos
-        objectGroup.update()
+        if not perdeu:
+            #Gera Os galo schaves
+            objectGroup.update()
 
-        timer += 1
-        if timer > 30:
-            timer = 0
-            if random.random() < 0.3:
-                newObstaculos = Obstaculos(objectGroup)
+            timer += 1
+            if timer > 30:
+                timer = 0
+                if random.random() < 0.3:
+                    newObstaculos = Obstaculos(objectGroup,obstaculosGroup)
+            #Analisa se tem impacto
+            collisions=pygame.sprite.spritecollide(personagem,obstaculosGroup, True, pygame.sprite.collide_mask)
+            colliTiro=pygame.sprite.groupcollide(tiroGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
+
+            if collisions:
+                perdeu = True
 
         objectGroup.draw(screen)
 
