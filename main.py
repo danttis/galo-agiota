@@ -47,6 +47,11 @@ contador = font.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
 pos_contador = contador.get_rect()
 pos_contador.center = (65, 50)
 
+#Contador de vidas
+vidas = 0
+
+
+
 timer = 0
 clock = pygame.time.Clock()
 
@@ -94,9 +99,10 @@ if __name__ == "__main__":
                 contador = font.render("Mortes: %i " %cont, True, (255, 255, 255), (0, 0, 0))
 
 
-
             if collisions:
-                perdeu = True
+                vidas += 1
+                if vidas >= 3:
+                    perdeu = True
 
             if perdeu == True:
                 pygame.mixer.music.stop()
