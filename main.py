@@ -40,6 +40,12 @@ tiroGroup=pygame.sprite.Group()
 #INSTANCIA DO OBJETO
 personagem =Persona(objectGroup)
 
+#CONTADOR DE MORTES
+cont = 0
+font = pygame.font.SysFont('arial black', 30)
+contador = font.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
+pos_contador = contador.get_rect()
+pos_contador.center = (65, 50)
 
 timer = 0
 clock = pygame.time.Clock()
@@ -61,7 +67,7 @@ if __name__ == "__main__":
                 pygame.quit()
                 exit(0)
             if event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_SPACE:
+                if event.key==pygame.K_SPACE and not perdeu:
                     newTiro=Municao(objectGroup,tiroGroup)
                     newTiro.rect.center=personagem.rect.center
 
@@ -82,9 +88,20 @@ if __name__ == "__main__":
             collisions=pygame.sprite.spritecollide(personagem,obstaculosGroup, True, pygame.sprite.collide_mask)
             colliTiro=pygame.sprite.groupcollide(tiroGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
 
+            #Conta as mortes
+            if  colliTiro:
+                cont += 1
+                contador = font.render("Mortes: %i " %cont, True, (255, 255, 255), (0, 0, 0))
+
+
+
             if collisions:
                 perdeu = True
 
+            if perdeu == True:
+                pygame.mixer.music.stop()
+        #Contador
+        screen.blit(contador, pos_contador)
         objectGroup.draw(screen)
 
         ##mouse=pygame.mouse.get_pos()
