@@ -29,7 +29,7 @@ class Persona(pygame.sprite.Sprite):
         if self.rect.top<0:
             self.rect.top=0
             self.speed = 0
-        elif self.rect.bottom>500:
-            self.rect.bottom = 500
+        elif self.rect.bottom>400:
+            self.rect.bottom = 400
             self.speed = 0
 
