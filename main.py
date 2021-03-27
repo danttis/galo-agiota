@@ -112,7 +112,7 @@ if __name__ == "__main__":
             #GAMEOVER
             while perdeu:
                 screen.fill([19, 173, 235])
-                texto("GAME OVER PRESS D PRA CONTINUAR OU S PTA SAIR", (0,0,0))
+                texto("GAME OVER PRESS D PARA CONTINUAR OU S PARA SAIR", (0,0,0))
                 pygame.display.update() 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
