@@ -50,7 +50,10 @@ pos_contador.center = (65, 50)
 #Contador de vidas
 vidas = 0
 
-
+#Texto de GameOver
+def texto(mensagem, cor):
+	textoTela = font.render(mensagem, True, cor)
+	screen.blit(textoTela, [750/8, 500/2])
 
 timer = 0
 clock = pygame.time.Clock()
@@ -106,6 +109,25 @@ if __name__ == "__main__":
 
             if perdeu == True:
                 pygame.mixer.music.stop()
+            #GAMEOVER
+            while perdeu:
+                screen.fill([19, 173, 235])
+                texto("GAME OVER PRESS D PRA CONTINUAR OU S PTA SAIR", (0,0,0))
+                pygame.display.update() 
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        gameLooping=False
+                        perdeu=False
+                    elif event.type==pygame.KEYDOWN:
+                        if event.key==pygame.K_s:
+                            pygame.quit()
+                            exit(0)
+                        if event.key==pygame.K_d:
+                            vidas = 0
+                            timer = 0
+                            cont = 0
+                            perdeu = False
+                            gameLooping=True
         #Contador
         screen.blit(contador, pos_contador)
         objectGroup.draw(screen)
