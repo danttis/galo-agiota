@@ -87,11 +87,9 @@ if __name__ == "__main__":
                 if event.key==pygame.K_SPACE and not perdeu:
                     tiro.play()
                     balas -= 1
-                    if balas > 0:
-                        newTiro=Municao(objectGroup,tiroGroup)
-                        newTiro.rect.center=personagem.rect.center
-                    else:
-                        perdeu = True
+                    newTiro=Municao(objectGroup,tiroGroup)
+                    newTiro.rect.center=personagem.rect.center
+
 
 
 
@@ -116,28 +114,37 @@ if __name__ == "__main__":
                 cont += 1
                 dano.play()
 
-                # CONTADOR DE FASES
 
-                if cont >= 20 and cont < 40:
-                    fase = 2
-                if fase == 2:
-                    fase1.stop()
-                    fase2.play()
-                if cont >= 40 and cont < 60:
-                    fase = 3
-                if fase == 3:
-                    fase2.stop()
-                    fase3.play()
+            # CONTADOR DE FASES
 
-            contador = font.render("Mortes: %i | balas: %i | vidas: %i | Fase: %i" %(cont, balas, vidas, fase), True, (255, 255, 255), (0, 0, 0))
+            if cont == 20:
+                fase = 2
+                balas = 40
 
+            if fase == 2:
+                fase1.stop()
+                fase2.play()
 
+            if cont == 40:
+                fase = 3
+                balas = 20
+            if fase == 3:
+                fase2.stop()
+                fase3.play()
+
+            #Contador de vidas e balas
             if collisions:
                 vidas -= 1
                 perdeu_vida.play()
                 if vidas <= 0:
                     morreu.play()
                     perdeu = True
+            if balas <= 0:
+                perdeu = True
+
+             # Exibir contadores
+
+            contador = font.render("Mortes: %i | Balas: %i | Vidas: %i | Fase: %i" % (cont, balas, vidas, fase),True, (255, 255, 255), (0, 0, 0))
 
             if perdeu == True:
                 # PARANDO DE REPRODUZIR A MUSICA
@@ -151,7 +158,7 @@ if __name__ == "__main__":
             #GAMEOVER
             while perdeu:
                 screen.fill([19, 173, 235])
-                texto("GAME OVER PRESS D PARA CONTINUAR OU S PARA SAIR", (0,0,0))
+                texto("VOCÊ MORREU PRESSIONE 'C' PARA CONTINUAR OU 'S' PARA SAIR", (0,0,0))
                 pygame.display.update() 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -161,7 +168,7 @@ if __name__ == "__main__":
                         if event.key==pygame.K_s:
                             pygame.quit()
                             exit(0)
-                        if event.key==pygame.K_d:
+                        if event.key==pygame.K_c:
                             fase = 1
                             vidas = 0
                             timer = 0
