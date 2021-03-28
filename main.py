@@ -131,6 +131,8 @@ if __name__ == "__main__":
                             vidas = 0
                             timer = 0
                             cont = 0
+                            vidas = 3
+                            balas = 40
                             perdeu = False
                             gameLooping=True
         #Contador
