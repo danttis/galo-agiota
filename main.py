@@ -42,13 +42,14 @@ personagem =Persona(objectGroup)
 
 #CONTADOR DE MORTES
 cont = 0
-font = pygame.font.SysFont('arial black', 30)
+font = pygame.font.SysFont('arial black', 15)
 contador = font.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
 pos_contador = contador.get_rect()
-pos_contador.center = (65, 50)
+pos_contador.center = (250, 50)
 
-#Contador de vidas
-vidas = 0
+#Contador de vidas e balas
+vidas = 3
+balas = 40
 
 #Texto de GameOver
 def texto(mensagem, cor):
@@ -76,8 +77,12 @@ if __name__ == "__main__":
                 exit(0)
             if event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_SPACE and not perdeu:
-                    newTiro=Municao(objectGroup,tiroGroup)
-                    newTiro.rect.center=personagem.rect.center
+                    balas -= 1
+                    if balas > 0:
+                        newTiro=Municao(objectGroup,tiroGroup)
+                        newTiro.rect.center=personagem.rect.center
+                    else:
+                        perdeu = True
 
 
 
@@ -97,14 +102,14 @@ if __name__ == "__main__":
             colliTiro=pygame.sprite.groupcollide(tiroGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
 
             #Conta as mortes
-            if  colliTiro:
+            if  colliTiro :
                 cont += 1
-                contador = font.render("Mortes: %i " %cont, True, (255, 255, 255), (0, 0, 0))
+            contador = font.render("Mortes: %i | balas: %i | vidas: %i" %(cont, balas, vidas), True, (255, 255, 255), (0, 0, 0))
 
 
             if collisions:
-                vidas += 1
-                if vidas >= 3:
+                vidas -= 1
+                if vidas <= 0:
                     perdeu = True
 
             if perdeu == True:
