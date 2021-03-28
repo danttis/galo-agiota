@@ -24,13 +24,19 @@ pygame.display.set_icon(screen)
 azul=(108,194,236)
 branco=(255,255,255)
 
-# MUSICA DE FUNDO
+# CARREGANDO TODAS AS MÚSICAS
 
-pygame.mixer.music.load("data/ambiente.wav")
-pygame.mixer.music.play(-1)
+menu = pygame.mixer.Sound("data/background_menu.wav")
+fase1 = pygame.mixer.Sound("data/background_fase1.wav")
+fase2 = pygame.mixer.Sound("data/background_fase2.wav")
+fase3 = pygame.mixer.Sound("data/background_fase3.wav")
+fase1.play()
 
 # SONS DE AÇÕES
-
+tiro = pygame.mixer.Sound("data/tiro.wav")
+morreu = pygame.mixer.Sound("data/morreu.wav")
+dano = pygame.mixer.Sound("data/dano.wav")
+perdeu_vida = pygame.mixer.Sound("data/perdeu_vida.wav")
 
 # CHAMANDO OBJETO
 objectGroup = pygame.sprite.Group()
@@ -41,6 +47,7 @@ tiroGroup=pygame.sprite.Group()
 personagem =Persona(objectGroup)
 
 #CONTADOR DE MORTES
+fase = 1
 cont = 0
 font = pygame.font.SysFont('arial black', 15)
 contador = font.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
@@ -56,6 +63,7 @@ def texto(mensagem, cor):
 	textoTela = font.render(mensagem, True, cor)
 	screen.blit(textoTela, [750/8, 500/2])
 
+# LIMITANDO FPS
 timer = 0
 clock = pygame.time.Clock()
 
@@ -63,7 +71,7 @@ if __name__ == "__main__":
     gameLooping=True
     perdeu=False
     while gameLooping:
-        #Limitador de FPS
+        #LIMITADOR DE FPS
         clock.tick(60)
 
         pygame.display.flip()
@@ -77,6 +85,7 @@ if __name__ == "__main__":
                 exit(0)
             if event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_SPACE and not perdeu:
+                    tiro.play()
                     balas -= 1
                     if balas > 0:
                         newTiro=Municao(objectGroup,tiroGroup)
@@ -92,6 +101,7 @@ if __name__ == "__main__":
             #Gera Os galo schaves
             objectGroup.update()
 
+            # DEFININDO APARIÇÃO DOS OBSTACULOS
             timer += 1
             if timer > 30:
                 timer = 0
@@ -104,16 +114,40 @@ if __name__ == "__main__":
             #Conta as mortes
             if  colliTiro :
                 cont += 1
-            contador = font.render("Mortes: %i | balas: %i | vidas: %i" %(cont, balas, vidas), True, (255, 255, 255), (0, 0, 0))
+                dano.play()
+
+                # CONTADOR DE FASES
+
+                if cont >= 20 and cont < 40:
+                    fase = 2
+                if fase == 2:
+                    fase1.stop()
+                    fase2.play()
+                if cont >= 40 and cont < 60:
+                    fase = 3
+                if fase == 3:
+                    fase2.stop()
+                    fase3.play()
+
+            contador = font.render("Mortes: %i | balas: %i | vidas: %i | Fase: %i" %(cont, balas, vidas, fase), True, (255, 255, 255), (0, 0, 0))
 
 
             if collisions:
                 vidas -= 1
+                perdeu_vida.play()
                 if vidas <= 0:
+                    morreu.play()
                     perdeu = True
 
             if perdeu == True:
-                pygame.mixer.music.stop()
+                # PARANDO DE REPRODUZIR A MUSICA
+                if fase == 1:
+                    fase1.stop()
+                elif fase == 2:
+                    fase2.stop()
+                else:
+                    fase3.stop()
+
             #GAMEOVER
             while perdeu:
                 screen.fill([19, 173, 235])
@@ -128,6 +162,7 @@ if __name__ == "__main__":
                             pygame.quit()
                             exit(0)
                         if event.key==pygame.K_d:
+                            fase = 1
                             vidas = 0
                             timer = 0
                             cont = 0
@@ -135,6 +170,7 @@ if __name__ == "__main__":
                             balas = 40
                             perdeu = False
                             gameLooping=True
+                            fase1.play()
         #Contador
         screen.blit(contador, pos_contador)
         objectGroup.draw(screen)

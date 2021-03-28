@@ -11,7 +11,7 @@ class Obstaculos(pygame.sprite.Sprite):
         self.rect = pygame.Rect(50, 50, 40, 40)
 
 
-        self.rect.x = 500 + random.randint(1, 250)
+        self.rect.x = 750 + random.randint(1, 250)
         self.rect.y = random.randint(1, 420)
 
         self.speed = 1 + random.random() * 3
