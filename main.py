@@ -46,7 +46,6 @@ tiroGroup=pygame.sprite.Group()
 
 #INSTANCIA DO OBJETO
 personagem =Persona(objectGroup)
-
 #CONTADOR DE MORTES E FASES
 fase = 1
 cont = 0
@@ -64,7 +63,6 @@ balas = 40
 def texto(mensagem, cor):
 	textoTela = fonteGame.render(mensagem, True, cor)
 	screen.blit(textoTela, [750/8, 500/2])
-
 # LIMITANDO FPS
 timer = 0
 clock = pygame.time.Clock()
@@ -72,31 +70,42 @@ clock = pygame.time.Clock()
 if __name__ == "__main__":
     gameLooping=False
     perdeu=False
+    #INICIA A TOCAR A MÚSICA DO MENU
+    menu.play()
+    # Entra no laço pq o gamelooping não é True
     while not gameLooping:
-        screen.fill(azul)
+        #Inicia a música do menu
+        #Define a fonte que usaremos
         fonteGameMENU1 = pygame.font.SysFont("data/Vermin_Vibes_1989.ttf", 25)
+        #CARREGA O FUNDO DO MENU
         bg=pygame.image.load("data/fundoM.png.png")
         screen.blit(bg, (0,0))
+        #CARREGA O LOGO DO MENU
         imagemMenu = pygame.image.load("data/logoMenu.png")
         screen.blit(imagemMenu, (135, 50))
-        textom1 = fonteGameMENU1.render("START GAME PRESS FOR [S]", True, (255, 255, 255))
-        textom2 = fonteGameMENU1.render("QUIT GAME PRESS FOR [Q]", True, (255, 255, 255))
+        #OPÇÕES DO MENU
+        textom1 = fonteGameMENU1.render("START GAME PRESS [S]", True, (255, 255, 255))
+        textom2 = fonteGameMENU1.render("QUIT GAME PRESS [Q]", True, (255, 255, 255))
         screen.blit(textom1, [245, 317])
         screen.blit(textom2, [245, 376])
-        #mouse=pygame.mouse.get_pos()
-        #print(mouse)
 
+        #ATUALIZA A TELA
         pygame.display.update()
+        #PEGA A LISTA DE TECLAS E VERIFICA QUAL É A CLICADA
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit(1)
+                menu.stop()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     pygame.quit()
                     exit(0)
-                if event.key == pygame.K_i:
+                    menu.stop()
+                if event.key == pygame.K_s:
+                    #VAI RETORNAR TRUE PRA ENTRAR NO OUTRO LAÇO DE REPETIÇÃO
                     gameLooping=True
-
+                    menu.stop()
+    #INICIA A TOCAR A MÚSICA DO JOGO
     fase1.play()
 
     while gameLooping:
@@ -123,6 +132,9 @@ if __name__ == "__main__":
                     #CHAMA A BALA, QUE SAIRA DO PERSONAGEM E VAI ANDANDO PELO EIXO X
                     newTiro=Municao(objectGroup,tiroGroup)
                     newTiro.rect.center=personagem.rect.center
+                if event.key == pygame.K_j and fase<4:
+                    fase+=1
+
 
 
 
@@ -148,7 +160,6 @@ if __name__ == "__main__":
                 cont += 1
                 dano.play()
 
-
             # CONTADOR DE FASES
 
             if cont == 20:
@@ -165,6 +176,39 @@ if __name__ == "__main__":
             if fase == 3:
                 fase2.stop()
                 fase3.play()
+            #QUANDO O JOGADOR CHEGA AQUI O JOGO ACABA, DAR OS PARABÉNS E VERIFICA SE QUER CONTINUAR OU SAIR
+            if fase == 4:
+                #VARIAVEL DE CONTROLE
+                fase4=True
+                # PARANDO DE REPRODUZIR A MUSICA
+                fase3.stop()
+                #REPETICAO ATÉ O CLIENTE RESPONDER ALGUMA COISA, QUANDO RESPONDE OU VAI SAIR OU VAI VOLTAR PRA FASE 1
+                while fase4:
+                    #IMPRESSÃO NA TELA DO GAME
+                    screen.fill([19, 173, 235])
+                    texto("VOCÊ VENCEU! SE DESEJAR JOGAR DE NOVO PRESSIONE [C] PARA SAIR [E]", (0, 0, 0))
+                    pygame.display.update()
+                    #ANALISE DE QUAL OPÇÃO ELE OPTOU
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            gameLooping = False
+                            perdeu = False
+                            fase4=false
+                        elif event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_e:
+                                pygame.quit()
+                                exit(0)
+                            if event.key == pygame.K_c:
+                                fase = 1
+                                vidas = 0
+                                timer = 0
+                                cont = 0
+                                vidas = 3
+                                balas = 40
+                                perdeu = False
+                                gameLooping = True
+                                fase4=False
+                                fase1.play()
 
             #Contador de vidas e balas
             if collisions:
