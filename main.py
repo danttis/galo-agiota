@@ -1,4 +1,4 @@
-import pygame
+import pygame, sys, os
 from pygame.locals import *
 from obstaculos import Obstaculos
 from personagem import Persona
@@ -23,6 +23,7 @@ pygame.display.set_icon(screen)
 
 azul=(108,194,236)
 branco=(255,255,255)
+fonteGame=pygame.font.SysFont("data/Vermin_Vibes_1989.ttf",15)
 
 # CARREGANDO TODAS AS MÚSICAS
 
@@ -30,7 +31,7 @@ menu = pygame.mixer.Sound("data/background_menu.wav")
 fase1 = pygame.mixer.Sound("data/background_fase1.wav")
 fase2 = pygame.mixer.Sound("data/background_fase2.wav")
 fase3 = pygame.mixer.Sound("data/background_fase3.wav")
-fase1.play()
+
 
 # SONS DE AÇÕES
 tiro = pygame.mixer.Sound("data/tiro.wav")
@@ -46,21 +47,22 @@ tiroGroup=pygame.sprite.Group()
 #INSTANCIA DO OBJETO
 personagem =Persona(objectGroup)
 
-#CONTADOR DE MORTES
+#CONTADOR DE MORTES E FASES
 fase = 1
 cont = 0
-font = pygame.font.SysFont('arial black', 15)
-contador = font.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
+contador = fonteGame.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
 pos_contador = contador.get_rect()
 pos_contador.center = (250, 50)
+
 
 #Contador de vidas e balas
 vidas = 3
 balas = 40
 
-#Texto de GameOver
+#FUNCOES
+#txt do game over
 def texto(mensagem, cor):
-	textoTela = font.render(mensagem, True, cor)
+	textoTela = fonteGame.render(mensagem, True, cor)
 	screen.blit(textoTela, [750/8, 500/2])
 
 # LIMITANDO FPS
@@ -68,14 +70,42 @@ timer = 0
 clock = pygame.time.Clock()
 
 if __name__ == "__main__":
-    gameLooping=True
+    gameLooping=False
     perdeu=False
+    while not gameLooping:
+        screen.fill(azul)
+        fonteGameMENU1 = pygame.font.SysFont("data/Vermin_Vibes_1989.ttf", 25)
+        bg=pygame.image.load("data/fundoM.png.png")
+        screen.blit(bg, (0,0))
+        imagemMenu = pygame.image.load("data/logoMenu.png")
+        screen.blit(imagemMenu, (135, 50))
+        textom1 = fonteGameMENU1.render("START GAME PRESS FOR [S]", True, (255, 255, 255))
+        textom2 = fonteGameMENU1.render("QUIT GAME PRESS FOR [Q]", True, (255, 255, 255))
+        screen.blit(textom1, [245, 317])
+        screen.blit(textom2, [245, 376])
+        #mouse=pygame.mouse.get_pos()
+        #print(mouse)
+
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit(1)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    exit(0)
+                if event.key == pygame.K_i:
+                    gameLooping=True
+
+    fase1.play()
+
     while gameLooping:
+
         #LIMITADOR DE FPS
         clock.tick(60)
 
         pygame.display.flip()
-        screen.fill(branco)
+        screen.fill(azul)
         ##Eventos do game
 
         for event in pygame.event.get():
@@ -83,10 +113,14 @@ if __name__ == "__main__":
             if event.type ==pygame.QUIT:
                 pygame.quit()
                 exit(0)
+            #QUANDO APERTA ESPAÇO ATIRA
             if event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_SPACE and not perdeu:
+                    #MUSICA QUANDO ATIRA
                     tiro.play()
+                    #DIMINUI 1 BALA A CADA CLIQUE
                     balas -= 1
+                    #CHAMA A BALA, QUE SAIRA DO PERSONAGEM E VAI ANDANDO PELO EIXO X
                     newTiro=Municao(objectGroup,tiroGroup)
                     newTiro.rect.center=personagem.rect.center
 
@@ -101,9 +135,9 @@ if __name__ == "__main__":
 
             # DEFININDO APARIÇÃO DOS OBSTACULOS
             timer += 1
-            if timer > 30:
+            if timer > 30*fase:
                 timer = 0
-                if random.random() < 0.3:
+                if random.random() < 0.3*fase:
                     newObstaculos = Obstaculos(objectGroup,obstaculosGroup)
             #Analisa se tem impacto
             collisions=pygame.sprite.spritecollide(personagem,obstaculosGroup, True, pygame.sprite.collide_mask)
@@ -144,7 +178,7 @@ if __name__ == "__main__":
 
              # Exibir contadores
 
-            contador = font.render("Mortes: %i | Balas: %i | Vidas: %i | Fase: %i" % (cont, balas, vidas, fase),True, (255, 255, 255), (0, 0, 0))
+            contador = fonteGame.render("Mortes: %i | Balas: %i | Vidas: %i | Fase: %i" % (cont, balas, vidas, fase),True, (255, 255, 255), (0, 0, 0))
 
             if perdeu == True:
                 # PARANDO DE REPRODUZIR A MUSICA
@@ -158,17 +192,17 @@ if __name__ == "__main__":
             #GAMEOVER
             while perdeu:
                 screen.fill([19, 173, 235])
-                texto("VOCÊ MORREU PRESSIONE 'C' PARA CONTINUAR OU 'S' PARA SAIR", (0,0,0))
-                pygame.display.update() 
+                texto("VOCÊ MORREU PRESSIONE 'C' PARA CONTINUAR OU 'S' PARA SAIR", (0, 0, 0))
+                pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        gameLooping=False
-                        perdeu=False
-                    elif event.type==pygame.KEYDOWN:
-                        if event.key==pygame.K_s:
+                        gameLooping = False
+                        perdeu = False
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_s:
                             pygame.quit()
                             exit(0)
-                        if event.key==pygame.K_c:
+                        if event.key == pygame.K_c:
                             fase = 1
                             vidas = 0
                             timer = 0
@@ -176,14 +210,12 @@ if __name__ == "__main__":
                             vidas = 3
                             balas = 40
                             perdeu = False
-                            gameLooping=True
+                            gameLooping = True
                             fase1.play()
         #Contador
         screen.blit(contador, pos_contador)
         objectGroup.draw(screen)
 
-        ##mouse=pygame.mouse.get_pos()
-        ##print(mouse)
 
         pygame.display.update()
 
