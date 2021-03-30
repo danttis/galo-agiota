@@ -51,12 +51,32 @@ fase = 1
 cont = 0
 contador = fonteGame.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
 pos_contador = contador.get_rect()
-pos_contador.center = (250, 50)
+pos_contador.center = (300, 50)
 
 
 #Contador de vidas e balas
 vidas = 3
 balas = 40
+
+#FUNDOS
+#Fundo menu;
+Menu_fundo = pygame.image.load("data/fundoM.png.png")
+imagemMenu = pygame.image.load("data/logoMenu.png")
+#Fase 1
+fase_1 = pygame.image.load("data/fundo_fase_1.png")
+pos_fase_1 = fase_1.get_rect()
+pos_fase_1.center = (375, 250)
+#Fase 2
+fase_2 = pygame.image.load("data/fundo_fase_2.png")
+
+#Fase 3
+fase_3 = pygame.image.load("data/fundo_fase_3.png")
+
+#Fase 4
+
+#Game over
+funeral = pygame.image.load("data/funeral.png")
+
 
 #FUNCOES
 #txt do game over
@@ -78,10 +98,8 @@ if __name__ == "__main__":
         #Define a fonte que usaremos
         fonteGameMENU1 = pygame.font.SysFont("data/Vermin_Vibes_1989.ttf", 25)
         #CARREGA O FUNDO DO MENU
-        bg=pygame.image.load("data/fundoM.png.png")
-        screen.blit(bg, (0,0))
+        screen.blit(Menu_fundo, pos_fase_1)
         #CARREGA O LOGO DO MENU
-        imagemMenu = pygame.image.load("data/logoMenu.png")
         screen.blit(imagemMenu, (135, 50))
         #OPÇÕES DO MENU
         textom1 = fonteGameMENU1.render("START GAME PRESS [S]", True, (255, 255, 255))
@@ -115,6 +133,7 @@ if __name__ == "__main__":
 
         pygame.display.flip()
         screen.fill(azul)
+        screen.blit(fase_1, pos_fase_1)
         ##Eventos do game
 
         for event in pygame.event.get():
@@ -166,9 +185,11 @@ if __name__ == "__main__":
                 fase = 2
                 balas = 40
 
+
             if fase == 2:
                 fase1.stop()
                 fase2.play()
+                screen.blit(fase_2, pos_fase_1)
 
             if cont == 40:
                 fase = 3
@@ -176,6 +197,7 @@ if __name__ == "__main__":
             if fase == 3:
                 fase2.stop()
                 fase3.play()
+                screen.blit(fase_3, pos_fase_1)
             #QUANDO O JOGADOR CHEGA AQUI O JOGO ACABA, DAR OS PARABÉNS E VERIFICA SE QUER CONTINUAR OU SAIR
             if fase == 4:
                 #VARIAVEL DE CONTROLE
@@ -233,9 +255,10 @@ if __name__ == "__main__":
                 else:
                     fase3.stop()
 
+
             #GAMEOVER
             while perdeu:
-                screen.fill([19, 173, 235])
+                screen.blit(funeral, pos_fase_1)
                 texto("VOCÊ MORREU PRESSIONE 'C' PARA CONTINUAR OU 'S' PARA SAIR", (0, 0, 0))
                 pygame.display.update()
                 for event in pygame.event.get():
