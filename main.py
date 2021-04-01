@@ -2,7 +2,8 @@ import pygame, sys, os
 from pygame.locals import *
 from obstaculos import Obstaculos
 from personagem import Persona
-from municao import Municao
+from municao import *
+from boss import Boss
 import random
 
 
@@ -43,9 +44,10 @@ perdeu_vida = pygame.mixer.Sound("data/perdeu_vida.wav")
 objectGroup = pygame.sprite.Group()
 obstaculosGroup=pygame.sprite.Group()
 tiroGroup=pygame.sprite.Group()
-
+tiro_bossGroup = pygame.sprite.Group()
 #INSTANCIA DO OBJETO
 personagem =Persona(objectGroup)
+boss = Boss(objectGroup)
 #CONTADOR DE MORTES E FASES
 fase = 1
 cont = 0
@@ -129,7 +131,7 @@ if __name__ == "__main__":
     while gameLooping:
 
         #LIMITADOR DE FPS
-        clock.tick(60)
+        clock.tick(240)
 
         pygame.display.flip()
         screen.fill(azul)
@@ -144,13 +146,14 @@ if __name__ == "__main__":
             #QUANDO APERTA ESPAÇO ATIRA
             if event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_SPACE and not perdeu:
-                    #MUSICA QUANDO ATIRA
+                    #SOM QUANDO ATIRA
                     tiro.play()
                     #DIMINUI 1 BALA A CADA CLIQUE
                     balas -= 1
                     #CHAMA A BALA, QUE SAIRA DO PERSONAGEM E VAI ANDANDO PELO EIXO X
                     newTiro=Municao(objectGroup,tiroGroup)
                     newTiro.rect.center=personagem.rect.center
+
                 if event.key == pygame.K_j and fase<4:
                     fase+=1
 
@@ -170,6 +173,11 @@ if __name__ == "__main__":
                 timer = 0
                 if random.random() < 0.3*fase:
                     newObstaculos = Obstaculos(objectGroup,obstaculosGroup)
+
+                # (CONSERTAR) BOSS ATIRANDO SEMPRE
+                #newTiro_boss = Municao_boss(objectGroup, tiro_bossGroup)
+                #newTiro_boss.rect.center = boss.rect.center
+
             #Analisa se tem impacto
             collisions=pygame.sprite.spritecollide(personagem,obstaculosGroup, True, pygame.sprite.collide_mask)
             colliTiro=pygame.sprite.groupcollide(tiroGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
@@ -197,7 +205,9 @@ if __name__ == "__main__":
             if fase == 3:
                 fase2.stop()
                 fase3.play()
+
                 screen.blit(fase_3, pos_fase_1)
+
             #QUANDO O JOGADOR CHEGA AQUI O JOGO ACABA, DAR OS PARABÉNS E VERIFICA SE QUER CONTINUAR OU SAIR
             if fase == 4:
                 #VARIAVEL DE CONTROLE
