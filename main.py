@@ -173,10 +173,11 @@ if __name__ == "__main__":
                 timer = 0
                 if random.random() < 0.3*fase:
                     newObstaculos = Obstaculos(objectGroup,obstaculosGroup)
+                    newTiro_boss = Municao_boss(objectGroup, tiro_bossGroup)
+                    newTiro_boss.rect.center = boss.rect.center
 
-                # (CONSERTAR) BOSS ATIRANDO SEMPRE
-                #newTiro_boss = Municao_boss(objectGroup, tiro_bossGroup)
-                #newTiro_boss.rect.center = boss.rect.center
+
+            colliTiro = pygame.sprite.groupcollide(tiro_bossGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
 
             #Analisa se tem impacto
             collisions=pygame.sprite.spritecollide(personagem,obstaculosGroup, True, pygame.sprite.collide_mask)
