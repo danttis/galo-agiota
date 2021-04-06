@@ -131,7 +131,7 @@ if __name__ == "__main__":
     while gameLooping:
 
         #LIMITADOR DE FPS
-        clock.tick(240)
+        clock.tick(120)
 
         pygame.display.flip()
         screen.fill(azul)
@@ -225,7 +225,7 @@ if __name__ == "__main__":
                         if event.type == pygame.QUIT:
                             gameLooping = False
                             perdeu = False
-                            fase4=false
+                            fase4=False
                         elif event.type == pygame.KEYDOWN:
                             if event.key == pygame.K_e:
                                 pygame.quit()
