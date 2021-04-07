@@ -55,7 +55,15 @@ contador = fonteGame.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
 pos_contador = contador.get_rect()
 pos_contador.center = (300, 50)
 
+#TEXTOS
 
+instrucoes = fonteGame.render("USE AS TECLAS DIRECIONAIS DO SEU TECLADO PARA MOVER O GALO PARA CIMA OU PARA BAIXO, E USE A TECLA SPACE BAR PARA ATIRAR ", True, (255, 255, 255), (0, 0, 0))
+pos_instruções = instrucoes.get_rect()
+pos_instruções = (18, 480)
+voce_morreu = fonteGame.render("VOCÊ MORREU PRESSIONE 'C' PARA CONTINUAR OU 'S' PARA SAIR", True, (255, 255, 255), (0, 0, 0))
+pos_morreu = voce_morreu.get_rect()
+pos_morreu = (200, 250)
+voce_venceu = fonteGame.render("VOCÊ VENCEU! SE DESEJAR JOGAR DE NOVO PRESSIONE [C] PARA SAIR [E]", True, (255, 255, 255), (0, 0, 0))
 #Contador de vidas e balas
 vidas = 3
 balas = 40
@@ -75,6 +83,7 @@ fase_2 = pygame.image.load("data/fundo_fase_2.png")
 fase_3 = pygame.image.load("data/fundo_fase_3.png")
 
 #Fase 4
+fase_4 = pygame.image.load("data/venceu.png")
 
 #Game over
 funeral = pygame.image.load("data/funeral.png")
@@ -125,6 +134,7 @@ if __name__ == "__main__":
                     #VAI RETORNAR TRUE PRA ENTRAR NO OUTRO LAÇO DE REPETIÇÃO
                     gameLooping=True
                     menu.stop()
+
     #INICIA A TOCAR A MÚSICA DO JOGO
     fase1.play()
 
@@ -136,6 +146,7 @@ if __name__ == "__main__":
         pygame.display.flip()
         screen.fill(azul)
         screen.blit(fase_1, pos_fase_1)
+        screen.blit(instrucoes, pos_instruções)
         ##Eventos do game
 
         for event in pygame.event.get():
@@ -156,6 +167,10 @@ if __name__ == "__main__":
 
                 if event.key == pygame.K_j and fase<4:
                     fase+=1
+
+
+
+
 
 
 
@@ -182,6 +197,7 @@ if __name__ == "__main__":
             #Analisa se tem impacto
             collisions=pygame.sprite.spritecollide(personagem,obstaculosGroup, True, pygame.sprite.collide_mask)
             colliTiro=pygame.sprite.groupcollide(tiroGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
+
 
             #Conta as mortes
             if  colliTiro :
@@ -218,8 +234,9 @@ if __name__ == "__main__":
                 #REPETICAO ATÉ O CLIENTE RESPONDER ALGUMA COISA, QUANDO RESPONDE OU VAI SAIR OU VAI VOLTAR PRA FASE 1
                 while fase4:
                     #IMPRESSÃO NA TELA DO GAME
-                    screen.fill([19, 173, 235])
-                    texto("VOCÊ VENCEU! SE DESEJAR JOGAR DE NOVO PRESSIONE [C] PARA SAIR [E]", (0, 0, 0))
+                    screen.blit(fase_4, pos_fase_1)
+                    screen.blit(voce_venceu, pos_morreu)
+                    #exto("VOCÊ VENCEU! SE DESEJAR JOGAR DE NOVO PRESSIONE [C] PARA SAIR [E]", (0, 0, 0))
                     pygame.display.update()
                     #ANALISE DE QUAL OPÇÃO ELE OPTOU
                     for event in pygame.event.get():
@@ -233,7 +250,6 @@ if __name__ == "__main__":
                                 exit(0)
                             if event.key == pygame.K_c:
                                 fase = 1
-                                vidas = 0
                                 timer = 0
                                 cont = 0
                                 vidas = 3
@@ -270,7 +286,7 @@ if __name__ == "__main__":
             #GAMEOVER
             while perdeu:
                 screen.blit(funeral, pos_fase_1)
-                texto("VOCÊ MORREU PRESSIONE 'C' PARA CONTINUAR OU 'S' PARA SAIR", (0, 0, 0))
+                screen.blit(voce_morreu, pos_morreu)
                 pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -282,7 +298,6 @@ if __name__ == "__main__":
                             exit(0)
                         if event.key == pygame.K_c:
                             fase = 1
-                            vidas = 0
                             timer = 0
                             cont = 0
                             vidas = 3
