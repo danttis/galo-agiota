@@ -61,9 +61,10 @@ instrucoes = fonteGame.render("USE AS TECLAS DIRECIONAIS DO SEU TECLADO PARA MOV
 pos_instruções = instrucoes.get_rect()
 pos_instruções = (18, 480)
 voce_morreu = fonteGame.render("VOCÊ MORREU PRESSIONE 'C' PARA CONTINUAR OU 'S' PARA SAIR", True, (255, 255, 255), (0, 0, 0))
-pos_morreu = voce_morreu.get_rect()
-pos_morreu = (200, 250)
+pos_global = voce_morreu.get_rect()
+pos_global = (200, 100)
 voce_venceu = fonteGame.render("VOCÊ VENCEU! SE DESEJAR JOGAR DE NOVO PRESSIONE [C] PARA SAIR [E]", True, (255, 255, 255), (0, 0, 0))
+
 #Contador de vidas e balas
 vidas = 3
 balas = 40
@@ -167,6 +168,7 @@ if __name__ == "__main__":
 
                 if event.key == pygame.K_j and fase<4:
                     fase+=1
+                    balas = 40
 
 
 
@@ -197,7 +199,8 @@ if __name__ == "__main__":
             #Analisa se tem impacto
             collisions=pygame.sprite.spritecollide(personagem,obstaculosGroup, True, pygame.sprite.collide_mask)
             colliTiro=pygame.sprite.groupcollide(tiroGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
-
+            collitiro_boss=pygame.sprite.spritecollide(personagem, tiro_bossGroup, True, pygame.sprite.collide_mask)
+            collitiro_=pygame.sprite.groupcollide(tiroGroup, tiro_bossGroup, True, True,pygame.sprite.collide_mask)
 
             #Conta as mortes
             if  colliTiro :
@@ -235,7 +238,7 @@ if __name__ == "__main__":
                 while fase4:
                     #IMPRESSÃO NA TELA DO GAME
                     screen.blit(fase_4, pos_fase_1)
-                    screen.blit(voce_venceu, pos_morreu)
+                    screen.blit(voce_venceu, pos_global)
                     #exto("VOCÊ VENCEU! SE DESEJAR JOGAR DE NOVO PRESSIONE [C] PARA SAIR [E]", (0, 0, 0))
                     pygame.display.update()
                     #ANALISE DE QUAL OPÇÃO ELE OPTOU
@@ -260,7 +263,7 @@ if __name__ == "__main__":
                                 fase1.play()
 
             #Contador de vidas e balas
-            if collisions:
+            if collisions or collitiro_boss:
                 vidas -= 1
                 perdeu_vida.play()
                 if vidas <= 0:
@@ -286,7 +289,7 @@ if __name__ == "__main__":
             #GAMEOVER
             while perdeu:
                 screen.blit(funeral, pos_fase_1)
-                screen.blit(voce_morreu, pos_morreu)
+                screen.blit(voce_morreu, pos_global)
                 pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:

@@ -24,7 +24,7 @@ class Municao_boss(pygame.sprite.Sprite):
 
         self.image = pygame.image.load("data/bala_boss.png")
         self.image = pygame.transform.scale(self.image, [15, 6])
-        self.rect=pygame.Rect(124,263,-165,-75)
+        self.rect=pygame.Rect(124,263,50,-55)
 
         #Velocidade na qual sai da nave e atravessa a tela
         self.speed = 4
