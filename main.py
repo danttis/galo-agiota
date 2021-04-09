@@ -67,6 +67,7 @@ voce_venceu = fonteGame.render("VOCÊ VENCEU! SE DESEJAR JOGAR DE NOVO PRESSIONE
 
 #Contador de vidas e balas
 vidas = 3
+vida_boss = 3
 balas = 40
 
 #FUNDOS
@@ -200,7 +201,9 @@ if __name__ == "__main__":
             collisions=pygame.sprite.spritecollide(personagem,obstaculosGroup, True, pygame.sprite.collide_mask)
             colliTiro=pygame.sprite.groupcollide(tiroGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
             collitiro_boss=pygame.sprite.spritecollide(personagem, tiro_bossGroup, True, pygame.sprite.collide_mask)
+            collitiro_Boss=pygame.sprite.spritecollide(boss, tiroGroup, True, pygame.sprite.collide_mask)
             collitiro_=pygame.sprite.groupcollide(tiroGroup, tiro_bossGroup, True, True,pygame.sprite.collide_mask)
+
 
             #Conta as mortes
             if  colliTiro :
@@ -271,6 +274,12 @@ if __name__ == "__main__":
                     perdeu = True
             if balas <= 0:
                 perdeu = True
+
+            if collitiro_Boss:
+                vida_boss -= 1
+                if vida_boss <= 0:
+                    fase = 4
+
 
              # Exibir contadores
 
