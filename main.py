@@ -277,7 +277,9 @@ if __name__ == "__main__":
 
             if collitiro_Boss:
                 vida_boss -= 1
+                perdeu_vida.play()
                 if vida_boss <= 0:
+                    morreu.play()
                     fase = 4
 
 
