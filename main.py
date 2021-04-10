@@ -312,6 +312,7 @@ if __name__ == "__main__":
             if collitiro_Boss:
                 vida_boss -= 1
                 perdeu_vida.play()
+                #SE VC MATAR O BOSS TELA DE VITÓRIA
                 if vida_boss <= 0:
                     morreu.play()
                     fase = 4
@@ -334,9 +335,12 @@ if __name__ == "__main__":
 
             #GAMEOVER
             while perdeu:
+                #CARREGA IMAGENS E ETC...
                 screen.blit(funeral, pos_fase_1)
                 screen.blit(voce_morreu, pos_global)
                 pygame.display.update()
+                ############################
+                #INICIO DA LISTA DE TECLAS
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         gameLooping = False
@@ -354,6 +358,7 @@ if __name__ == "__main__":
                             perdeu = False
                             gameLooping = True
                             fase1.play()
+                #FIM DA LISTA DE TECLAS ##########
         #Contador
         screen.blit(contador, pos_contador)
         objectGroup.draw(screen)
