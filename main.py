@@ -101,8 +101,37 @@ timer = 0
 clock = pygame.time.Clock()
 
 if __name__ == "__main__":
+    #VÁRIAVEIS DE CONTROLE DO GAME
     gameLooping=False
     perdeu=False
+    #############################
+
+    #INICIO DA ANIMAÇÃO   ############################################ (LEANDRO, VC TEM QUE IMPLEMANTAR ABAIXO)
+    animacaoIni=True
+    while animacaoIni:
+        cont=0
+        gerarobg=True
+        while gerarobg:
+            """"AQUI FAZ A IMPLEMENTAÇÃO DA
+            ANIMAÇÃO"""
+            cont += 1/3
+            if cont == 15:
+                gerarobg = False
+            #LISTA DE TECLAS
+            for event in pygame.event.get():
+                #SE APERTAR NO X DA ABA O PROGRAMA QUITA
+                if event.type == pygame.QUIT:
+                    exit(1)
+                    menu.stop()
+                if event.type== KEYDOWN:
+                    #SE APERTAR E O PROGRAMA SAI DA ANIMAÇÃO E VAI PRO MENU
+                    if event.key==K_e:
+                        gerarobg = False
+        animacaoIni=False
+    #FIM DA ANIMAÇÃO      ######################################################
+
+
+    #INICIO DO MENU AQUI ##################################################
     #INICIA A TOCAR A MÚSICA DO MENU
     menu.play()
     # Entra no laço pq o gamelooping não é True
@@ -137,6 +166,8 @@ if __name__ == "__main__":
                     gameLooping=True
                     menu.stop()
 
+    #FIM DO MENU #################################################################
+
     #INICIA A TOCAR A MÚSICA DO JOGO
     fase1.play()
 
@@ -151,6 +182,7 @@ if __name__ == "__main__":
         screen.blit(instrucoes, pos_instruções)
         ##Eventos do game
 
+        #(IMPORTANTE) LISTA DE TECLAS ###############################
         for event in pygame.event.get():
             ##Quando aperta o X ele exita o pygame
             if event.type ==pygame.QUIT:
@@ -166,23 +198,18 @@ if __name__ == "__main__":
                     #CHAMA A BALA, QUE SAIRA DO PERSONAGEM E VAI ANDANDO PELO EIXO X
                     newTiro=Municao(objectGroup,tiroGroup)
                     newTiro.rect.center=personagem.rect.center
-
+                #FAZ PULAR DE FASE
                 if event.key == pygame.K_j and fase<4:
                     fase+=1
                     balas = 40
-
-
-
-
-
-
-
-
+        #(IMPORTANTE) FIM DA LISTA DE TECLAS ####################3###################
 
         #Lógica do game em sí
 
         if not perdeu:
-            #Gera Os galo schaves
+            #Gera Os galo schaves #########################
+
+            #ATUALIZA OS OBJETOS DA TELA
             objectGroup.update()
 
             # DEFININDO APARIÇÃO DOS OBSTACULOS
@@ -190,7 +217,9 @@ if __name__ == "__main__":
             if timer > 30*fase:
                 timer = 0
                 if random.random() < 0.3*fase:
+                    #GERA UM NOVO OBSTACULO(OS GALOS NORMAIS)
                     newObstaculos = Obstaculos(objectGroup,obstaculosGroup)
+                    #GERA O TIRO DO BOSS (O GALO DE JUJU)
                     newTiro_boss = Municao_boss(objectGroup, tiro_bossGroup)
                     newTiro_boss.rect.center = boss.rect.center
 
@@ -216,7 +245,7 @@ if __name__ == "__main__":
                 fase = 2
                 balas = 40
 
-
+            #TRATA AS FASES DO GAME ##########################################
             if fase == 2:
                 fase1.stop()
                 fase2.play()
@@ -264,17 +293,20 @@ if __name__ == "__main__":
                                 gameLooping = True
                                 fase4=False
                                 fase1.play()
+            #FIM DO TRATAMENTO DAS FASES DO GAME ##########################################################
 
             #Contador de vidas e balas
+            #SE HOUVER COLIZÃO COM ALGUM GALO OU O TIRO DO GALO BOSS PERDE VIDA
             if collisions or collitiro_boss:
                 vidas -= 1
                 perdeu_vida.play()
                 if vidas <= 0:
                     morreu.play()
                     perdeu = True
+            #SE AS BALAS ACABARAM VC PERDE
             if balas <= 0:
                 perdeu = True
-
+            #SE HOUVER COLIZÃO DA SUA BALA COM O BOSS O BOSS PERDE VIDA, SE ELE PERDER AS SUAS 3 VIDAS VC GANHA O GAME
             if collitiro_Boss:
                 vida_boss -= 1
                 perdeu_vida.play()
@@ -287,6 +319,7 @@ if __name__ == "__main__":
 
             contador = fonteGame.render("Mortes: %i | Balas: %i | Vidas: %i | Fase: %i" % (cont, balas, vidas, fase),True, (255, 255, 255), (0, 0, 0))
 
+            #TRATAMENTO DE FASES(2) CASO VOCÊ PERCA
             if perdeu == True:
                 # PARANDO DE REPRODUZIR A MUSICA
                 if fase == 1:
