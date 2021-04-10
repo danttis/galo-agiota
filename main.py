@@ -109,13 +109,13 @@ if __name__ == "__main__":
     #INICIO DA ANIMAÇÃO   ############################################ (LEANDRO, VC TEM QUE IMPLEMANTAR ABAIXO)
     animacaoIni=True
     while animacaoIni:
-        cont=0
+        contani=0
         gerarobg=True
         while gerarobg:
             """"AQUI FAZ A IMPLEMENTAÇÃO DA
             ANIMAÇÃO"""
-            cont += 1/3
-            if cont == 15:
+            contani += 1/3
+            if contani == 15:
                 gerarobg = False
             #LISTA DE TECLAS
             for event in pygame.event.get():
@@ -257,7 +257,9 @@ if __name__ == "__main__":
             if fase == 3:
                 fase2.stop()
                 fase3.play()
-
+            if cont == 60:
+                fase3.stop()
+                fase = 4
                 screen.blit(fase_3, pos_fase_1)
 
             #QUANDO O JOGADOR CHEGA AQUI O JOGO ACABA, DAR OS PARABÉNS E VERIFICA SE QUER CONTINUAR OU SAIR
