@@ -6,6 +6,7 @@ from municao import *
 from boss import Boss
 from obj_animacao import GaloAnimacao
 from obj_animacao import Dinheiro
+from barricada import Barricada
 import random
 
 ##inica o pygame e suas dependências
@@ -46,6 +47,7 @@ objectGroup = pygame.sprite.Group()
 obstaculosGroup=pygame.sprite.Group()
 tiroGroup=pygame.sprite.Group()
 tiro_bossGroup = pygame.sprite.Group()
+barreira = pygame.sprite.Group()
 #INSTANCIA DO OBJETO
 personagem =Persona(objectGroup)
 boss = Boss(objectGroup)
@@ -106,13 +108,17 @@ fonte_animacao = pygame.font.SysFont("Vermin_Vibes_1989.ttf", 20)
 nomeJogo = pygame.image.load('data/logoJogo.png')
 
 #FUNCOES
-#txt do game over
-def texto(mensagem, cor):
-	textoTela = fonteGame.render(mensagem, True, cor)
-	screen.blit(textoTela, [750/8, 500/2])
 # LIMITANDO FPS
 timer = 0
 clock = pygame.time.Clock()
+
+#limpagem da tela
+barreira_limp = Barricada(objectGroup,barreira)
+def limpa():
+    pygame.sprite.spritecollide(barreira_limp, obstaculosGroup, True)
+    pygame.sprite.spritecollide(barreira_limp, tiro_bossGroup, True)
+    pygame.sprite.spritecollide(barreira_limp, tiroGroup, True)
+
 
 if __name__ == "__main__":
     #VÁRIAVEIS DE CONTROLE DO GAME
@@ -236,6 +242,7 @@ if __name__ == "__main__":
                 #FAZ PULAR DE FASE
                 if event.key == pygame.K_j and fase<4:
                     fase+=1
+                    limpa()
                     balas = 40
         #(IMPORTANTE) FIM DA LISTA DE TECLAS ####################3###################
 
@@ -259,6 +266,8 @@ if __name__ == "__main__":
                     newTiro_boss.rect.center = boss.rect.center
 
 
+
+
             colliTiro = pygame.sprite.groupcollide(tiro_bossGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
 
             #Analisa se tem impacto
@@ -280,22 +289,29 @@ if __name__ == "__main__":
                 fase = 2
                 balas = 40
 
+
+
+
             #TRATA AS FASES DO GAME ##########################################
             if fase == 2:
                 fase1.stop()
                 fase2.play()
                 screen.blit(fase_2, pos_fase_1)
 
+
             if cont == 40:
                 fase = 3
                 balas = 20
+
+
             if fase == 3:
                 fase2.stop()
                 fase3.play()
+                screen.blit(fase_3, pos_fase_1)
             if cont == 60:
                 fase3.stop()
                 fase = 4
-                screen.blit(fase_3, pos_fase_1)
+
 
             #QUANDO O JOGADOR CHEGA AQUI O JOGO ACABA, DAR OS PARABÉNS E VERIFICA SE QUER CONTINUAR OU SAIR
             if fase == 4:
@@ -321,6 +337,7 @@ if __name__ == "__main__":
                                 pygame.quit()
                                 exit(0)
                             if event.key == pygame.K_c:
+                                limpa()
                                 fase = 1
                                 timer = 0
                                 cont = 0
@@ -330,6 +347,7 @@ if __name__ == "__main__":
                                 gameLooping = True
                                 fase4=False
                                 fase1.play()
+
             #FIM DO TRATAMENTO DAS FASES DO GAME ##########################################################
 
             #Contador de vidas e balas
@@ -393,6 +411,7 @@ if __name__ == "__main__":
                             perdeu = False
                             gameLooping = True
                             fase1.play()
+                            limpa()
                 #FIM DA LISTA DE TECLAS ##########
         #Contador
         screen.blit(contador, pos_contador)
