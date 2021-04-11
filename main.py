@@ -4,8 +4,9 @@ from obstaculos import Obstaculos
 from personagem import Persona
 from municao import *
 from boss import Boss
+from obj_animacao import GaloAnimacao
+from obj_animacao import Dinheiro
 import random
-
 
 ##inica o pygame e suas dependências
 
@@ -90,6 +91,19 @@ fase_4 = pygame.image.load("data/venceu.png")
 #Game over
 funeral = pygame.image.load("data/funeral.png")
 
+#Animação dados
+galoInicio = pygame.sprite.Group()
+galo = GaloAnimacao()
+galoInicio.add(galo)
+
+dinheiro = pygame.sprite.Group()
+dim = Dinheiro()
+dinheiro.add(dim)
+dinheiro2 = pygame.sprite.Group()
+dim2 = Dinheiro()
+dinheiro2.add(dim2)
+fonte_animacao = pygame.font.SysFont("Vermin_Vibes_1989.ttf", 20)
+nomeJogo = pygame.image.load('data/logoJogo.png')
 
 #FUNCOES
 #txt do game over
@@ -114,8 +128,29 @@ if __name__ == "__main__":
         while gerarobg:
             """"AQUI FAZ A IMPLEMENTAÇÃO DA
             ANIMAÇÃO"""
-            contani += 1/3
-            if contani == 15:
+            clock.tick(20)
+            #Atribui elementos na tela de animação #####
+            screen.fill((128, 128, 128))
+            screen.blit(nomeJogo, (70,90))
+            #o text abaixo é opcional
+            text = fonte_animacao.render("PRESSIONE [E] PARA PULAR A ANIMAÇÂO", True, (255, 255, 255), (0, 0, 0))
+            screen.blit(text, (250, 450))
+            #dinheiros
+            dinheiro.draw(screen)
+            dinheiro.update()
+            pygame.display.flip()
+            dinheiro2.draw(screen)
+            dinheiro2.update()
+            pygame.display.flip()
+            #galo andando na tela
+            galoInicio.draw(screen)
+            galoInicio.update()
+            pygame.display.flip()
+
+            pygame.display.update()
+
+            contani += 1
+            if contani == 120:
                 gerarobg = False
             #LISTA DE TECLAS
             for event in pygame.event.get():
@@ -365,10 +400,3 @@ if __name__ == "__main__":
 
 
         pygame.display.update()
-
-
-
-
-
-
-
