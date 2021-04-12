@@ -31,6 +31,7 @@ fonteGame=pygame.font.SysFont("data/Vermin_Vibes_1989.ttf",15)
 # CARREGANDO TODAS AS MÚSICAS
 
 menu = pygame.mixer.Sound("data/background_menu.wav")
+animacao = pygame.mixer.Sound("data/animacao.wav")
 fase1 = pygame.mixer.Sound("data/background_fase1.wav")
 fase2 = pygame.mixer.Sound("data/background_fase2.wav")
 fase3 = pygame.mixer.Sound("data/background_fase3.wav")
@@ -58,9 +59,18 @@ contador = fonteGame.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
 pos_contador = contador.get_rect()
 pos_contador.center = (300, 50)
 
-#TEXTOS
+# OBJETIVO DAS FASES
+objetivo = fonteGame.render("Derrote 20 GALOS CAPANGAS para passar de fase",True, (255,255,255), (0, 0, 0))
+pos_objetivos = objetivo.get_rect()
+pos_objetivos = (5, 100)
 
-instrucoes = fonteGame.render("USE AS TECLAS DIRECIONAIS DO SEU TECLADO PARA MOVER O GALO PARA CIMA OU PARA BAIXO, E USE A TECLA SPACE BAR PARA ATIRAR ", True, (255, 255, 255), (0, 0, 0))
+# OBJETIVO DA FASE 3
+objetivo3 = fonteGame.render("Derrote o GALO DEVEDOR",True, (255,255,255), (0, 0, 0))
+pos_objetivos3 = objetivo.get_rect()
+pos_objetivos3 = (5, 100)
+
+#TEXTOS
+instrucoes = fonteGame.render("USE AS TECLAS DIRECIONAIS DO SEU TECLADO PARA MOVER O GALO PARA CIMA OU PARA BAIXO, E USE A TECLA SPACE BAR PARA ATIRAR", True, (255, 255, 255), (0, 0, 0))
 pos_instruções = instrucoes.get_rect()
 pos_instruções = (18, 480)
 voce_morreu = fonteGame.render("VOCÊ MORREU PRESSIONE 'C' PARA CONTINUAR OU 'S' PARA SAIR", True, (255, 255, 255), (0, 0, 0))
@@ -70,7 +80,7 @@ voce_venceu = fonteGame.render("VOCÊ VENCEU! SE DESEJAR JOGAR DE NOVO PRESSIONE
 
 #Contador de vidas e balas
 vidas = 3
-vida_boss = 3
+vida_boss = 10
 balas = 40
 
 #FUNDOS
@@ -126,9 +136,11 @@ if __name__ == "__main__":
     perdeu=False
     #############################
 
-    #INICIO DA ANIMAÇÃO   ############################################ (LEANDRO, VC TEM QUE IMPLEMANTAR ABAIXO)
+    #INICIO DA ANIMAÇÃO   ############################################
     animacaoIni=True
     while animacaoIni:
+        # INICIA A MUSICA DA ANIMAÇÃO
+        animacao.play()
         contani=0
         gerarobg=True
         while gerarobg:
@@ -169,6 +181,8 @@ if __name__ == "__main__":
                     if event.key==K_e:
                         gerarobg = False
         animacaoIni=False
+        # PARA A MUSICA DA ANIMACAO
+        animacao.stop()
     #FIM DA ANIMAÇÃO      ######################################################
 
 
@@ -208,9 +222,9 @@ if __name__ == "__main__":
                     menu.stop()
 
     #FIM DO MENU #################################################################
-
-    #INICIA A TOCAR A MÚSICA DO JOGO
-    fase1.play()
+    # INICIA A TOCAR A MÚSICA DO JOGO
+    if fase == 1:
+        fase1.play()
 
     while gameLooping:
 
@@ -221,6 +235,8 @@ if __name__ == "__main__":
         screen.fill(azul)
         screen.blit(fase_1, pos_fase_1)
         screen.blit(instrucoes, pos_instruções)
+        screen.blit(objetivo, pos_objetivos)
+
         ##Eventos do game
 
         #(IMPORTANTE) LISTA DE TECLAS ###############################
@@ -242,6 +258,15 @@ if __name__ == "__main__":
                 #FAZ PULAR DE FASE
                 if event.key == pygame.K_j and fase<4:
                     fase+=1
+                    cont+=20
+                    # TROCA A MUSICA
+                    if fase == 2:
+                        fase1.stop()
+                        fase2.play()
+                    elif fase == 3:
+                        fase2.stop()
+                        fase3.play()
+                    # LIMPA A TELA
                     limpa()
                     balas = 40
         #(IMPORTANTE) FIM DA LISTA DE TECLAS ####################3###################
@@ -277,6 +302,15 @@ if __name__ == "__main__":
             collitiro_Boss=pygame.sprite.spritecollide(boss, tiroGroup, True, pygame.sprite.collide_mask)
             collitiro_=pygame.sprite.groupcollide(tiroGroup, tiro_bossGroup, True, True,pygame.sprite.collide_mask)
 
+            # SE HOUVER COLIZÃO DA SUA BALA COM O BOSS O BOSS PERDE VIDA, SE ELE PERDER AS SUAS 10 VIDAS VC GANHA O GAME
+            if collitiro_Boss and fase == 3:
+                vida_boss -= 1
+                perdeu_vida.play()
+                # SE VC MATAR O BOSS TELA DE VITÓRIA
+                if vida_boss <= 0:
+                    morreu.play()
+                    # MUDA PARA TELA DE VITORIA
+                    fase = 4
 
             #Conta as mortes
             if  colliTiro :
@@ -289,35 +323,29 @@ if __name__ == "__main__":
                 fase = 2
                 balas = 40
 
-
-
-
-            #TRATA AS FASES DO GAME ##########################################
-            if fase == 2:
-                fase1.stop()
-                fase2.play()
-                screen.blit(fase_2, pos_fase_1)
-
-
             if cont == 40:
                 fase = 3
                 balas = 20
 
-
-            if fase == 3:
-                fase2.stop()
-                fase3.play()
-                screen.blit(fase_3, pos_fase_1)
             if cont == 60:
-                fase3.stop()
                 fase = 4
 
+            if fase == 2:
+
+                screen.blit(fase_2, pos_fase_1)
+                screen.blit(objetivo, pos_objetivos)
+
+            elif fase == 3:
+                screen.blit(fase_3, pos_fase_1)
+                screen.blit(objetivo3, pos_objetivos3)
 
             #QUANDO O JOGADOR CHEGA AQUI O JOGO ACABA, DAR OS PARABÉNS E VERIFICA SE QUER CONTINUAR OU SAIR
             if fase == 4:
                 #VARIAVEL DE CONTROLE
                 fase4=True
                 # PARANDO DE REPRODUZIR A MUSICA
+                fase1.stop()
+                fase2.stop()
                 fase3.stop()
                 #REPETICAO ATÉ O CLIENTE RESPONDER ALGUMA COISA, QUANDO RESPONDE OU VAI SAIR OU VAI VOLTAR PRA FASE 1
                 while fase4:
@@ -342,11 +370,13 @@ if __name__ == "__main__":
                                 timer = 0
                                 cont = 0
                                 vidas = 3
+                                vida_boss = 10
                                 balas = 40
                                 perdeu = False
                                 gameLooping = True
                                 fase4=False
-                                fase1.play()
+                                if fase == 1:
+                                    fase1.play()
 
             #FIM DO TRATAMENTO DAS FASES DO GAME ##########################################################
 
@@ -361,19 +391,12 @@ if __name__ == "__main__":
             #SE AS BALAS ACABARAM VC PERDE
             if balas <= 0:
                 perdeu = True
-            #SE HOUVER COLIZÃO DA SUA BALA COM O BOSS O BOSS PERDE VIDA, SE ELE PERDER AS SUAS 3 VIDAS VC GANHA O GAME
-            if collitiro_Boss:
-                vida_boss -= 1
-                perdeu_vida.play()
-                #SE VC MATAR O BOSS TELA DE VITÓRIA
-                if vida_boss <= 0:
-                    morreu.play()
-                    fase = 4
 
 
              # Exibir contadores
 
-            contador = fonteGame.render("Mortes: %i | Balas: %i | Vidas: %i | Fase: %i" % (cont, balas, vidas, fase),True, (255, 255, 255), (0, 0, 0))
+            contador = fonteGame.render("Mortes: %i | Balas: %i | Vidas: %i | Fase: %i | BOSS: %i" % (cont, balas, vidas, fase, vida_boss),True, (255, 255, 255), (0, 0, 0))
+
 
             #TRATAMENTO DE FASES(2) CASO VOCÊ PERCA
             if perdeu == True:
@@ -407,10 +430,12 @@ if __name__ == "__main__":
                             timer = 0
                             cont = 0
                             vidas = 3
+                            vida_boss = 10
                             balas = 40
                             perdeu = False
                             gameLooping = True
-                            fase1.play()
+                            if fase == 1:
+                                fase1.play()
                             limpa()
                 #FIM DA LISTA DE TECLAS ##########
         #Contador
