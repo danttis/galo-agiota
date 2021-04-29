@@ -1,13 +1,14 @@
 import pygame
 import math
 import random
+from plot.imagens import *
 
 # CLASSE DE MUNIÇÃO DO PERSONAGEM
 class Municao(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
 
-        self.image = pygame.image.load("data/bala.png")
+        self.image = bala_agiota_img
         self.image = pygame.transform.scale(self.image, [15, 6])
         self.rect=pygame.Rect(124,263,-165,-75)
 
@@ -25,7 +26,7 @@ class Municao_boss(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
         # APARENCIA DA BALA
-        self.image = pygame.image.load("data/bala_boss.png")
+        self.image = bala_bos_img
         self.image = pygame.transform.scale(self.image, [15, 6])
         self.rect=pygame.Rect(124,263,50,-55)
 

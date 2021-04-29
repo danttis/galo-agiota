@@ -1,13 +1,14 @@
 import pygame
 import math
 import random
-from municao import Municao_boss
+from plot.imagens import *
+from objetos_.municao import Municao
 
 class Boss(pygame.sprite.Sprite):
     # DEFININDO O TAMANHO E APARENCIA DO BOSS
     def __init__(self, *groups):
         super().__init__(*groups)
-        self.image=pygame.image.load("data/boss.png")
+        self.image=boss_img
         self.image=pygame.transform.scale(self.image,[100,100])
         self.rect=pygame.Rect(50,50,40,40)
 

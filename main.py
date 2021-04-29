@@ -1,126 +1,30 @@
-import pygame, sys, os
-from pygame.locals import *
-from obstaculos import Obstaculos
-from personagem import Persona
-from municao import *
-from boss import Boss
-from obj_animacao import GaloAnimacao
-from obj_animacao import Dinheiro
-from barricada import Barricada
-import random
-
-##inica o pygame e suas dependências
+from ações.cabeçarios import * #CHAMANDO PACOTES NECESSÁRIOS
 
 pygame.init()
-pygame.font.init()
-pygame.mixer.init()
 
-##Definições da janela do game
-
-screenDimension=(750,500)
-pygame.display.set_caption("Galo Agiota 1.0")
-screen=pygame.display.set_mode(screenDimension, 0, 32)
-pygame.display.set_icon(screen)
-
-##Define variáveis com valores de cor ou coordenada
-
-azul=(108,194,236)
-branco=(255,255,255)
-fonteGame=pygame.font.SysFont("data/Vermin_Vibes_1989.ttf",15)
-
-# CARREGANDO TODAS AS MÚSICAS
-
-menu = pygame.mixer.Sound("data/background_menu.wav")
-animacao = pygame.mixer.Sound("data/animacao.wav")
-fase1 = pygame.mixer.Sound("data/background_fase1.wav")
-fase2 = pygame.mixer.Sound("data/background_fase2.wav")
-fase3 = pygame.mixer.Sound("data/background_fase3.wav")
-
-
-# SONS DE AÇÕES
-tiro = pygame.mixer.Sound("data/tiro.wav")
-morreu = pygame.mixer.Sound("data/morreu.wav")
-dano = pygame.mixer.Sound("data/dano.wav")
-perdeu_vida = pygame.mixer.Sound("data/perdeu_vida.wav")
-
-# CHAMANDO OBJETO
-objectGroup = pygame.sprite.Group()
-obstaculosGroup=pygame.sprite.Group()
-tiroGroup=pygame.sprite.Group()
-tiro_bossGroup = pygame.sprite.Group()
-barreira = pygame.sprite.Group()
-#INSTANCIA DO OBJETO
-personagem =Persona(objectGroup)
-boss = Boss(objectGroup)
-#CONTADOR DE MORTES E FASES
-fase = 1
-cont = 0
-contador = fonteGame.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
-pos_contador = contador.get_rect()
-pos_contador.center = (300, 50)
-
-# OBJETIVO DAS FASES
-objetivo = fonteGame.render("Derrote 20 GALOS CAPANGAS para passar de fase",True, (255,255,255), (0, 0, 0))
-pos_objetivos = objetivo.get_rect()
-pos_objetivos = (5, 100)
-
-# OBJETIVO DA FASE 3
-objetivo3 = fonteGame.render("Derrote o GALO DEVEDOR",True, (255,255,255), (0, 0, 0))
-pos_objetivos3 = objetivo.get_rect()
-pos_objetivos3 = (5, 100)
-
-#TEXTOS
-instrucoes = fonteGame.render("USE AS TECLAS DIRECIONAIS DO SEU TECLADO PARA MOVER O GALO PARA CIMA OU PARA BAIXO, E USE A TECLA SPACE BAR PARA ATIRAR", True, (255, 255, 255), (0, 0, 0))
-pos_instruções = instrucoes.get_rect()
-pos_instruções = (18, 480)
-voce_morreu = fonteGame.render("VOCÊ MORREU PRESSIONE 'C' PARA CONTINUAR OU 'S' PARA SAIR", True, (255, 255, 255), (0, 0, 0))
-pos_global = voce_morreu.get_rect()
-pos_global = (200, 100)
-voce_venceu = fonteGame.render("VOCÊ VENCEU! SE DESEJAR JOGAR DE NOVO PRESSIONE [C] PARA SAIR [E]", True, (255, 255, 255), (0, 0, 0))
-
-#Contador de vidas e balas
+#VARIÁVEIS CONTADORAS
 vidas = 3
 vida_boss = 10
 balas = 40
-
-#FUNDOS
-#Fundo menu;
-Menu_fundo = pygame.image.load("data/fundoM.png.png")
-imagemMenu = pygame.image.load("data/logoMenu.png")
-#Fase 1
-fase_1 = pygame.image.load("data/fundo_fase_1.png")
-pos_fase_1 = fase_1.get_rect()
-pos_fase_1.center = (375, 250)
-#Fase 2
-fase_2 = pygame.image.load("data/fundo_fase_2.png")
-
-#Fase 3
-fase_3 = pygame.image.load("data/fundo_fase_3.png")
-
-#Fase 4
-fase_4 = pygame.image.load("data/venceu.png")
-
-#Game over
-funeral = pygame.image.load("data/funeral.png")
-
-#Animação dados
-galoInicio = pygame.sprite.Group()
+fase = 1
+cont = 0
+#PAINEL CONTADOR
+contador = fonteGame.render("Mortes: ", True, (255, 255, 255), (0, 0, 0))
+pos_contador = contador.get_rect()
+pos_contador.center = (300, 50)
+#ANIMAÇÃO DOS GALOS
 galo = GaloAnimacao()
 galoInicio.add(galo)
-
-dinheiro = pygame.sprite.Group()
 dim = Dinheiro()
 dinheiro.add(dim)
-dinheiro2 = pygame.sprite.Group()
 dim2 = Dinheiro()
 dinheiro2.add(dim2)
-fonte_animacao = pygame.font.SysFont("Vermin_Vibes_1989.ttf", 20)
-nomeJogo = pygame.image.load('data/logoJogo.png')
 
 #FUNCOES
 # LIMITANDO FPS
 timer = 0
 clock = pygame.time.Clock()
+fase4 = False
 
 #limpagem da tela
 barreira_limp = Barricada(objectGroup,barreira)
@@ -136,35 +40,36 @@ if __name__ == "__main__":
     perdeu=False
     #############################
 
-    #INICIO DA ANIMAÇÃO   ############################################
+    #INICIO DA ANIMAÇÃO
+
+    ############################################
     animacaoIni=True
     while animacaoIni:
         # INICIA A MUSICA DA ANIMAÇÃO
         animacao.play()
         contani=0
         gerarobg=True
+
         while gerarobg:
             """"AQUI FAZ A IMPLEMENTAÇÃO DA
             ANIMAÇÃO"""
             clock.tick(20)
-            #Atribui elementos na tela de animação #####
+            # ATRIBUI ELEMENTOS NA TELA DA ANIMAÇÃO
             screen.fill((128, 128, 128))
             screen.blit(nomeJogo, (70,90))
-            #o text abaixo é opcional
-            text = fonte_animacao.render("PRESSIONE [E] PARA PULAR A ANIMAÇÂO", True, (255, 255, 255), (0, 0, 0))
+            #O TEXT ABAIXO É OPCIONAL
             screen.blit(text, (250, 450))
-            #dinheiros
+            #DINHEIRO
             dinheiro.draw(screen)
             dinheiro.update()
             pygame.display.flip()
             dinheiro2.draw(screen)
             dinheiro2.update()
             pygame.display.flip()
-            #galo andando na tela
+            #ANIMAÇÃO DO GALO
             galoInicio.draw(screen)
             galoInicio.update()
             pygame.display.flip()
-
             pygame.display.update()
 
             contani += 1
@@ -189,18 +94,14 @@ if __name__ == "__main__":
     #INICIO DO MENU AQUI ##################################################
     #INICIA A TOCAR A MÚSICA DO MENU
     menu.play()
-    # Entra no laço pq o gamelooping não é True
+    # ENTRA NO LAÇO PORQUE O GAMELOOPING NÃO É TRUE
     while not gameLooping:
-        #Inicia a música do menu
-        #Define a fonte que usaremos
-        fonteGameMENU1 = pygame.font.SysFont("data/Vermin_Vibes_1989.ttf", 25)
+        #INICIA A MUSICA NO MENU
         #CARREGA O FUNDO DO MENU
-        screen.blit(Menu_fundo, pos_fase_1)
+        fundos_menu()
         #CARREGA O LOGO DO MENU
-        screen.blit(imagemMenu, (135, 50))
+        imagem_menu()
         #OPÇÕES DO MENU
-        textom1 = fonteGameMENU1.render("START GAME PRESS [S]", True, (255, 255, 255))
-        textom2 = fonteGameMENU1.render("QUIT GAME PRESS [Q]", True, (255, 255, 255))
         screen.blit(textom1, [245, 317])
         screen.blit(textom2, [245, 376])
 
@@ -233,15 +134,14 @@ if __name__ == "__main__":
 
         pygame.display.flip()
         screen.fill(azul)
-        screen.blit(fase_1, pos_fase_1)
+        fundo_fase1()
         screen.blit(instrucoes, pos_instruções)
         screen.blit(objetivo, pos_objetivos)
 
-        ##Eventos do game
+        ##EVENTOS DO JOGO
 
-        #(IMPORTANTE) LISTA DE TECLAS ###############################
         for event in pygame.event.get():
-            ##Quando aperta o X ele exita o pygame
+            ##SE APERTAR NO X DA ABA O PROGRAMA QUITA
             if event.type ==pygame.QUIT:
                 pygame.quit()
                 exit(0)
@@ -269,9 +169,8 @@ if __name__ == "__main__":
                     # LIMPA A TELA
                     limpa()
                     balas = 40
-        #(IMPORTANTE) FIM DA LISTA DE TECLAS ####################3###################
-
-        #Lógica do game em sí
+       # (IMPORTANTE) FIM DA LISTA DE TECLAS ####################3###################
+        #LÓGICA DO JOGO EM SI
 
         if not perdeu:
             #Gera Os galo schaves #########################
@@ -290,17 +189,13 @@ if __name__ == "__main__":
                     newTiro_boss = Municao_boss(objectGroup, tiro_bossGroup)
                     newTiro_boss.rect.center = boss.rect.center
 
-
-
-
+            # Analisa se tem impacto
             colliTiro = pygame.sprite.groupcollide(tiro_bossGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
-
-            #Analisa se tem impacto
-            collisions=pygame.sprite.spritecollide(personagem,obstaculosGroup, True, pygame.sprite.collide_mask)
-            colliTiro=pygame.sprite.groupcollide(tiroGroup, obstaculosGroup, True, True,pygame.sprite.collide_mask)
-            collitiro_boss=pygame.sprite.spritecollide(personagem, tiro_bossGroup, True, pygame.sprite.collide_mask)
-            collitiro_Boss=pygame.sprite.spritecollide(boss, tiroGroup, True, pygame.sprite.collide_mask)
-            collitiro_=pygame.sprite.groupcollide(tiroGroup, tiro_bossGroup, True, True,pygame.sprite.collide_mask)
+            collisions = pygame.sprite.spritecollide(personagem, obstaculosGroup, True, pygame.sprite.collide_mask)
+            colliTiro = pygame.sprite.groupcollide(tiroGroup, obstaculosGroup, True, True, pygame.sprite.collide_mask)
+            collitiro_boss = pygame.sprite.spritecollide(personagem, tiro_bossGroup, True, pygame.sprite.collide_mask)
+            collitiro_Boss = pygame.sprite.spritecollide(boss, tiroGroup, True, pygame.sprite.collide_mask)
+            collitiro_ = pygame.sprite.groupcollide(tiroGroup, tiro_bossGroup, True, True, pygame.sprite.collide_mask)
 
             # SE HOUVER COLIZÃO DA SUA BALA COM O BOSS O BOSS PERDE VIDA, SE ELE PERDER AS SUAS 10 VIDAS VC GANHA O GAME
             if collitiro_Boss and fase == 3:
@@ -331,13 +226,16 @@ if __name__ == "__main__":
                 fase = 4
 
             if fase == 2:
-
-                screen.blit(fase_2, pos_fase_1)
                 screen.blit(objetivo, pos_objetivos)
 
+                fundo_fase2()
+
             elif fase == 3:
-                screen.blit(fase_3, pos_fase_1)
+                fundo_fase3()
                 screen.blit(objetivo3, pos_objetivos3)
+
+            #contador
+            contador = fonteGame.render("Mortes: %i | Balas: %i | Vidas: %i | Fase: %i | BOSS: %i" % (cont, balas, vidas, fase, vida_boss), True, (255, 255, 255), (0, 0, 0))
 
             #QUANDO O JOGADOR CHEGA AQUI O JOGO ACABA, DAR OS PARABÉNS E VERIFICA SE QUER CONTINUAR OU SAIR
             if fase == 4:
@@ -347,56 +245,24 @@ if __name__ == "__main__":
                 fase1.stop()
                 fase2.stop()
                 fase3.stop()
-                #REPETICAO ATÉ O CLIENTE RESPONDER ALGUMA COISA, QUANDO RESPONDE OU VAI SAIR OU VAI VOLTAR PRA FASE 1
-                while fase4:
-                    #IMPRESSÃO NA TELA DO GAME
-                    screen.blit(fase_4, pos_fase_1)
-                    screen.blit(voce_venceu, pos_global)
-                    #exto("VOCÊ VENCEU! SE DESEJAR JOGAR DE NOVO PRESSIONE [C] PARA SAIR [E]", (0, 0, 0))
-                    pygame.display.update()
-                    #ANALISE DE QUAL OPÇÃO ELE OPTOU
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
-                            gameLooping = False
-                            perdeu = False
-                            fase4=False
-                        elif event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_e:
-                                pygame.quit()
-                                exit(0)
-                            if event.key == pygame.K_c:
-                                limpa()
-                                fase = 1
-                                timer = 0
-                                cont = 0
-                                vidas = 3
-                                vida_boss = 10
-                                balas = 40
-                                perdeu = False
-                                gameLooping = True
-                                fase4=False
-                                if fase == 1:
-                                    fase1.play()
 
-            #FIM DO TRATAMENTO DAS FASES DO GAME ##########################################################
+             #FIM DO TRATAMENTO DAS FASES DO GAME
 
             #Contador de vidas e balas
             #SE HOUVER COLIZÃO COM ALGUM GALO OU O TIRO DO GALO BOSS PERDE VIDA
-            if collisions or collitiro_boss:
+
+            if not collisions and not collitiro_boss:
+                pass
+            else:
                 vidas -= 1
                 perdeu_vida.play()
                 if vidas <= 0:
                     morreu.play()
                     perdeu = True
-            #SE AS BALAS ACABARAM VC PERDE
+
+             #SE AS BALAS ACABARAM VC PERDE
             if balas <= 0:
-                perdeu = True
-
-
-             # Exibir contadores
-
-            contador = fonteGame.render("Mortes: %i | Balas: %i | Vidas: %i | Fase: %i | BOSS: %i" % (cont, balas, vidas, fase, vida_boss),True, (255, 255, 255), (0, 0, 0))
-
+                    perdeu = True
 
             #TRATAMENTO DE FASES(2) CASO VOCÊ PERCA
             if perdeu == True:
@@ -410,10 +276,14 @@ if __name__ == "__main__":
 
 
             #GAMEOVER
-            while perdeu:
+            while perdeu or fase4:
                 #CARREGA IMAGENS E ETC...
-                screen.blit(funeral, pos_fase_1)
-                screen.blit(voce_morreu, pos_global)
+                if perdeu:
+                    funeral()
+                    screen.blit(voce_morreu, pos_global)
+                if fase4:
+                    fundo_fase4()
+                    screen.blit(voce_venceu, pos_global)
                 pygame.display.update()
                 ############################
                 #INICIO DA LISTA DE TECLAS
@@ -433,14 +303,14 @@ if __name__ == "__main__":
                             vida_boss = 10
                             balas = 40
                             perdeu = False
+                            fase4 = False
                             gameLooping = True
                             if fase == 1:
                                 fase1.play()
                             limpa()
                 #FIM DA LISTA DE TECLAS ##########
         #Contador
-        screen.blit(contador, pos_contador)
+        screen.blit(contador,pos_contador)
         objectGroup.draw(screen)
-
 
         pygame.display.update()

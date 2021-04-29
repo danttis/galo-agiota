@@ -1,9 +1,11 @@
 import pygame
 import math
+from plot.imagens import *
+
 class Persona(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
-        self.image=pygame.image.load("data/galo.png")
+        self.image=personagem_img
         self.image=pygame.transform.scale(self.image,[100,100])
         self.rect=pygame.Rect(124,263,10,10)
 
