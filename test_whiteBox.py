@@ -1,6 +1,6 @@
 from main import *
 from fundos import *
-from municao import Municao_boss
+from municao import Municao
 import pygame
 from obj_animacao import Dinheiro
 from obj_animacao import GaloAnimacao
