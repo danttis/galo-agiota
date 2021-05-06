@@ -7,7 +7,7 @@ from obj_animacao import GaloAnimacao
 
 #CAIXA BRANCA
 
-def test_animacao(): #DIHEIRO NA TELA
+def test_animacao(): #DINHEIRO NA TELA
 	screen = pygame.set_mode(screenDimension)
 	objeto = Dinheiro()
 	objDinheiro = screen.blit(objeto)
