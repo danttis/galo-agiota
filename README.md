@@ -1,6 +1,7 @@
-#README
+Jogo para a disciplina de Laboratório de programação do curso de Matemática Computacional da Universidade Federal do Cariri. 
 
-JOGO GALO AGIOTA 1.0
+GALO AGIOTA 1.0
 
-Pygame:
-pip install pygame
+Requisitos: Python e Pygame
+
+Pygame: pip install pygame
