@@ -1,4 +1,4 @@
-from ações.cabeçarios import *
+from acoes.cabecalho import *
 
 # CHAMANDO OBJETO
 objectGroup = pygame.sprite.Group()

@@ -1,4 +1,4 @@
-from ações.cabeçarios import *
+from acoes.cabecalho import *
 pygame.init()
 pygame.font.init()
 pygame.mixer.init()

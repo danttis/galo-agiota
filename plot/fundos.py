@@ -1,4 +1,4 @@
-from ações.cabeçarios import *
+from acoes.cabecalho import *
 
 #funções que plota(exibe) os fundos no game,
 

@@ -1,4 +1,4 @@
-from ações.cabeçarios import *
+from acoes.cabecalho import *
 
 #CRIANDO CADA TEXTO USADO NO TEXTO, SALVO O CONTADOR
 
@@ -15,8 +15,8 @@ pos_objetivos3 = (5, 100)
 
 #TEXTOS
 instrucoes = fonteGame.render("USE AS TECLAS DIRECIONAIS DO SEU TECLADO PARA MOVER O GALO PARA CIMA OU PARA BAIXO, E USE A TECLA SPACE BAR PARA ATIRAR", True, (255, 255, 255), (0, 0, 0))
-pos_instruções = instrucoes.get_rect()
-pos_instruções = (18, 480)
+pos_instrucoes = instrucoes.get_rect()
+pos_instrucoes = (18, 480)
 voce_morreu = fonteGame.render("VOCÊ MORREU PRESSIONE 'C' PARA CONTINUAR OU 'S' PARA SAIR", True, (255, 255, 255), (0, 0, 0))
 pos_global = voce_morreu.get_rect()
 pos_global = (200, 100)

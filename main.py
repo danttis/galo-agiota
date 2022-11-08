@@ -1,4 +1,4 @@
-from ações.cabeçarios import * #CHAMANDO PACOTES NECESSÁRIOS
+from acoes.cabecalho import * #CHAMANDO PACOTES NECESSÁRIOS
 
 pygame.init()
 
@@ -135,7 +135,7 @@ if __name__ == "__main__":
         pygame.display.flip()
         screen.fill(azul)
         fundo_fase1()
-        screen.blit(instrucoes, pos_instruções)
+        screen.blit(instrucoes, pos_instrucoes)
         screen.blit(objetivo, pos_objetivos)
 
         ##EVENTOS DO JOGO
