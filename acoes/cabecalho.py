@@ -11,7 +11,7 @@ from plot.fundos import *
 from plot.imagens import *
 from plot.sons import *
 from plot.texto_e_contadores import *
-from obj_animacao import GaloAnimacao
-from obj_animacao import Dinheiro
-from barricada import Barricada
+from objetos_.obj_animacao import GaloAnimacao
+from objetos_.obj_animacao import Dinheiro
+from objetos_.barricada import Barricada
 import random
